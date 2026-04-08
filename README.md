@@ -74,9 +74,9 @@ Instructions on how to get this project running on a fresh machine.
           │  ┌────────────────┐ │
           │  │   Strategies   │ │
           │  │ • Conservative │ │
-          │  │ • Aggressive  │ │
-          │  │ • Adaptive    │ │
-          │  │ • Random      │ │
+          │  │ • Aggressive   │ │
+          │  │ • Adaptive     │ │
+          │  │ • Random       │ │
           │  └────────────────┘ │
           └─────────┬───────────┘
                     │
