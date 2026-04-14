@@ -105,7 +105,7 @@ python -c "from main import AuctionSimulator; sim = AuctionSimulator(10, 10); si
 ```
 
 ### **GUI Validation:**
-- Launch application: `python main.py`
+- Launch application: `python live_auction.py`
 - Test Live Auction tab with sample data files
 - Test Advanced Analysis tab with strategy simulation
 - Verify real-time updates and statistics display
