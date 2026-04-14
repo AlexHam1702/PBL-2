@@ -31,7 +31,7 @@ Instructions on how to get this project running on a fresh machine.
    pip install -r requirements.txt
 
 4. **Run Application:**\
-   python main.py
+   python live_auction.py
 
 
 ## **🛠️ Technical Architecture**
