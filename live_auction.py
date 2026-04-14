@@ -4,16 +4,16 @@ import os
 from pathlib import Path
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QLineEdit, QPushButton, QTextEdit, QLabel, 
-                             QComboBox, QTableWidget, QTableWidgetItem, QSpinBox, QSlider)
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal
-from PyQt5.QtGui import QFont, QColor
+                             QComboBox, QSlider)
+from PyQt5.QtCore import Qt, QTimer 
+from PyQt5.QtGui import QFont
 
 # --- LOGIQUE ALGORITHMIQUE (BST) ---
 
 class Node:
     def __init__(self, price, player_name):
         self.price = price
-        self.players = [player_name]  # Liste pour gérer les doublons
+        self.players = [player_name]  # List to generate duplicates
         self.left = None
         self.right = None
 
@@ -44,7 +44,7 @@ class AuctionBST:
                 self._insert_recursive(node.right, price, player_name)
 
     def find_lowest_unique(self):
-        """Parcours infixe pour trouver le plus petit prix avec un seul joueur."""
+        """In-order traversal to find the lowest unique bid."""
         uniques = []
         self._inorder_traversal(self.root, uniques)
         for price, players in uniques:

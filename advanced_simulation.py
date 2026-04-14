@@ -71,11 +71,13 @@ class AuctionBST:
         if node is None:
             return None
 
-        # Case 1: Node has right subtree
+        # Case 1: If there is a right subtree, the successor is the minimum value there.
+        # This is the next greater price in the in-order sequence of this tree.
         if node.right:
             return self._min_value(node.right)
 
-        # Case 2: No right subtree, go up to find successor
+        # Case 2: If no right subtree, climb up until we find a parent where this node is
+        # in the left subtree. That parent is the next larger value.
         parent = node.parent
         while parent and node == parent.right:
             node = parent
@@ -88,11 +90,13 @@ class AuctionBST:
         if node is None:
             return None
 
-        # Case 1: Node has left subtree
+        # Case 1: If there is a left subtree, the predecessor is the maximum value there.
+        # This is the previous smaller price in the in-order traversal.
         if node.left:
             return self._max_value(node.left)
 
-        # Case 2: No left subtree, go up to find predecessor
+        # Case 2: If no left subtree, climb up until we find a parent where this node is
+        # in the right subtree. That parent is the next smaller value.
         parent = node.parent
         while parent and node == parent.left:
             node = parent
@@ -262,7 +266,7 @@ class AuctionSimulator:
 
     def add_strategy(self, strategy_class, num_players: int, **kwargs):
         """Add a strategy with specified number of players."""
-        strategy_name = kwargs.get('name', strategy_class.__name__)
+        strategy_name = kwargs.get('name', strategy_class.__name__.replace('Strategy', ''))
         self.strategies[strategy_name] = {
             'class': strategy_class,
             'num_players': num_players,
@@ -289,7 +293,6 @@ class AuctionSimulator:
             self._update_player_stats(round_result)
 
         end_time = time.time()
-        print(".2f")
         print(f"Simulation completed: {len(self.round_results)} rounds")
 
     def _run_single_round(self, round_num: int, base_cost: float, alpha: float) -> Dict:
@@ -324,6 +327,8 @@ class AuctionSimulator:
         existing_bids = set()
         for player in players:
             round_data = {
+                # Pass a snapshot of existing bids so each player decides based on the current
+                # state without being affected by later bid changes in the same round.
                 'existing_bids': existing_bids.copy(),
                 'min_possible_bid': 0,
                 'max_possible_bid': 100,
@@ -642,19 +647,19 @@ def run_comprehensive_analysis():
     param_results = sim.run_parameter_sensitivity(base_costs, alphas)
 
     print("\nParameter Effects on Win Rates:")
-    print(f"{'Parameters':<15} {'Conservative':<12} {'Aggressive':<12} {'Adaptive':<12} {'Random':<12}")
-    print("-" * 60)
+    strategy_names = [s for s in next(iter(param_results.values()))['strategies'].keys() if s != 'seller_stats']
+    print(f"{'Parameters':<15}" + ''.join(f" {name:<12}" for name in strategy_names))
+    print("-" * (15 + 13 * len(strategy_names)))
 
     for param_key, data in param_results.items():
         bc = data['base_cost']
         a = data['alpha']
         strategies = data['strategies']
 
-        print(f"bc{bc}_a{a:<11}")
-        for s_name in ['Conservative', 'Aggressive', 'Adaptive', 'Random']:
-            if s_name in strategies:
-                win_rate = strategies[s_name]['win_rate']
-                print(f"{win_rate:<12.1f}", end="")
+        print(f"bc{bc}_a{a:<11}", end="")
+        for s_name in strategy_names:
+            win_rate = strategies.get(s_name, {}).get('win_rate', 0)
+            print(f"{win_rate:<12.1f}", end="")
         print()
 
     # Benchmark implementations
